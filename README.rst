@@ -14,8 +14,7 @@ Why?
 Boofuzz was lacking a lot of the features needed to fuzz aerospace protocols. By forking `Boofuzz`_, the goal was to
 be able to easily add them without having to undergo the code review of Boofuzz maintainers, to speed up the development.
 
-This project won't be maintained much further, excepted some minor fixes and updates by the Safran Electronics & Defense 
-Red Team, so feel free to fork it and make it your own, or, if you happen to be one of the maintainers of Boofuzz, to
+This project won't be maintained much further, excepted some minor fixes if asked, so feel free to fork it and make it your own, or, if you happen to be one of the maintainers of Boofuzz, to
 integrate the changes back into the main project. We would be happy to help you with that. 
 
 Features
@@ -45,7 +44,7 @@ Fuzzungus also includes a number of new features:
 - Timeout detection
 - Full protocol sessions supports (multiple acks, fragmentation...)
 
-.. figure:: ./artwork/fuzzungus-picture.png
+.. figure:: ./artwork/fuzzungus-logo.png
    :alt: Jeff Fungus from Monsters Inc
 
    Jeff Fungus from Monsters Inc
@@ -59,4 +58,4 @@ See `INSTALL.rst`_ for advanced and detailed instructions.
 Documentation
 -------------
 
-Documentation is available at https://boofuzz.readthedocs.io/, including nifty quickstart guides.
+Go to the `docs/` repo to generate the documentation using `make html`.

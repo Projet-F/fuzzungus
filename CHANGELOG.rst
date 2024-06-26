@@ -14,8 +14,7 @@ Fixes
 
 - Elimination of public variables.
 - Explicit and cohesive interface.
-- In `session.py`, generate all requests and store them in a table before doing the legacy routine of boofuzz (for each node, call callback function, generate data, send it, receive)
- and then, remove the data generation in the boofuzz routine and change it by a recovery from the table. (This can be a solution for checksum in a next node)
+- In `session.py`, generate all requests and store them in a table before doing the legacy routine of boofuzz (for each node, call callback function, generate data, send it, receive) and then, remove the data generation in the boofuzz routine and change it by a recovery from the table. (This can be a solution for checksum in a next node)
 - Make fragmentation more clear, this can be used as a fragmentation method or as a function which can change the data's generation method
 
 Upcomming

@@ -2,6 +2,9 @@
 Contributing
 ============
 
+.. warning::
+    The guidelines below are more or less of copy/paste from the Boofuzz file, so take it as a starting point but as we said in the Readme, we are probably not gonna maintain this much.
+
 Issues and Bugs
 ===============
 If you have a bug report or idea for improvement, please create an issue on GitHub, or a pull request with the fix.
@@ -13,7 +16,7 @@ All pull requests are subject to professional code review. If you do not want yo
 Contributors
 ============
 
-See installation instructions for details on installing boofuzz from source with developer options.
+See installation instructions for details on installing fuzzungus from source with developer options.
 
 Pull Request Checklist
 ----------------------
