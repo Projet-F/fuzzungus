@@ -44,7 +44,7 @@ Fuzzungus also includes a number of new features:
 - Timeout detection
 - Full protocol sessions supports (multiple acks, fragmentation...)
 
-.. figure:: ./artwork/fuzzungus-logo.png
+.. figure:: ./artwork/fungus-picture.png
    :alt: Jeff Fungus from Monsters Inc
 
    Jeff Fungus from Monsters Inc
