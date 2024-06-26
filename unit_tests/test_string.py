@@ -7,15 +7,15 @@ import pytest
 
 from boofuzz import *
 
-
 @pytest.fixture(autouse=True)
 def clear_requests():
+    """Clear the requests between tests."""
     yield
     blocks.REQUESTS = {}
     blocks.CURRENT = None
 
-
 class TestString(unittest.TestCase):
+    """Test class for the String class."""
     def _given_string(self):
         self.default_value = "ABCDEFGH"
         self.default_default_value = "\x00" * len(self.default_value)
@@ -43,18 +43,18 @@ class TestString(unittest.TestCase):
         generator = uut.mutations(default_value=self.default_default_value)
 
         n = 0
-        for expected, actual in zip(String._fuzz_library, generator):
+        for expected, actual in zip(String.get_fuzz_library(String), generator):
             n += 1
             self.assertEqual(expected, actual)
 
-        for expected, actual in zip(String._variable_mutation_multipliers, generator):
+        for expected, actual in zip(String.get_variable_mutation_multipliers(String), generator):
             n += 1
             self.assertEqual(self.default_default_value * expected, actual)
 
         for sequence in String.long_string_seeds:
             for size in [
                 length + delta
-                for length, delta in itertools.product(String._long_string_lengths, String._long_string_deltas)
+                for length, delta in itertools.product(String.get_long_string_lengths, String.get_long_string_deltas)
             ]:
                 n += 1
                 expected = sequence * math.ceil(size / len(sequence))
@@ -154,7 +154,8 @@ class TestString(unittest.TestCase):
             generator = uut.mutations(default_value=self.default_default_value)
 
             n = 0
-            for expected, actual in zip(OrderedDict.fromkeys(list(map(fit_to_size, String._fuzz_library))), generator):
+            for expected, actual in zip(OrderedDict.fromkeys(list(map(fit_to_size
+                                                                      , String._fuzz_library))), generator):
                 n += 1
                 self.assertEqual(expected, uut.encode(actual))
 

@@ -1,7 +1,5 @@
 import struct
-
 from boofuzz.primitives.bit_field import BitField
-
 
 class DWord(BitField):
     """The 4 byte sized bit field primitive.

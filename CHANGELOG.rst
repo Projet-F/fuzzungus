@@ -1,17 +1,86 @@
 Changelog
 =========
 
-Upcomming
----------
+Room for improvement
+--------------------
+
+Fuzzungus is a work in progress. Here are some areas that could use improvement.
+
 Features
 ^^^^^^^^
-- Added Python 3.12 compatibility.
 
 Fixes
 ^^^^^
 
+- Elimination of public variables.
+- Explicit and cohesive interface.
+- In `session.py`, generate all requests and store them in a table before doing the legacy routine of boofuzz (for each node, call callback function, generate data, send it, receive)
+ and then, remove the data generation in the boofuzz routine and change it by a recovery from the table. (This can be a solution for checksum in a next node)
+- Make fragmentation more clear, this can be used as a fragmentation method or as a function which can change the data's generation method
+
+Upcomming
+---------
+Features
+^^^^^^^^
+
+Fixes
+^^^^^
+
+v1.0.0
+------
+
+Features
+^^^^^^^^
+
+- Configuration : 
+   - Creation of a `main.py` file that executes every configuration file and centralizes options and parameters
+   - Creation of a :class:`BaseConfig` class to standardize the configuration files.
+   - Updated the `./boo` command with : 
+      - New options (for example to allow to replay a session).
+      - New commands (for example `./boo continue` to continue a session).
+      - See the *Configuration of a session* in documentation.
+- Archiving : 
+   - Move database to a PostGre database, to allow for bigger sessions.
+   - Create a folder for each session, which contains the values of the CLI parameters used, the database(s), the recap, etc.
+- With the standardization above, introducing infinite sessions with infinite seed incrementation for random generation of data.
+- Logs : 
+   - Standardized logs : 
+      - `log_error` for internal errors.
+      - `log_fail` for test case failures because of the target.
+   - New logs :
+      - `log_target_warn` for warnings about the target.
+      - `log_target_error` for errors about the target.
+      - `log_recap` for a recap of the session.
+   - Move loggers to their own module.
+- Primitives :
+   - New one : :class:`MultipleDefault` : To allow multiple default values for a fuzzing session (duplicate the fuzzing tree).
+   - Standardized primitives : 
+      - They all enherit from :class:`BasePrimitive` instead of :class:`Fuzzable`.
+      - :class:`Fuzzable` methods that only concerned the primitives have been moved to :class:`BasePrimitive`.
+      - :class:`Delim` now enherits from :class:`String`.
+   - Standardized data generation between primitives in three modes :
+      - Library of seclists, long strings...
+      - Random Mutation of the said library.
+      - Random Generation.
+   - Following with libraries, implementing sane file reading for the primitives.
+- Connections : 
+   - New one : :class:`WebsocketConnection` to allow fuzzing of websocket servers.
+   - Add RTO calculation to warn about timeouts errors in the target.
+- Monitor : Add a :class:`BusyboxMonitor` to monitor busybox targets (really simple linux) + the appropriate bash script to use it.
+- Move some deprecated files that where at the root of the project to the `deprecated` folder. Same for monitors, that now have their own folder. Etc.
+- Callbacks : 
+   - Create a :class:`BaseCallback` class to standardize the callbacks.
+   - Create some callbacks for TFTP, etc, that each configuration file now enherits and override depending on the target.
+   - Move them to their own module.
+- Nominal data
+   - Add in :class:`Session` the possibility to add nominal data to the fuzzing tree. Check the `configuration-files/` folder for examples.
+- Documentation :
+   - Updated to correspond to the new features.
+   - Now allow the use of the `make latexpdf`.
+
 v0.4.2
 ------
+
 Features
 ^^^^^^^^
 - Remove six compatibility module.

@@ -51,7 +51,6 @@ class FuzzableBlock(Fuzzable):
         for item in self.stack:
             if item.fuzzable:
                 num_mutations += item.get_num_mutations()
-
         return num_mutations
 
     def get_child_data(self, mutation_context):

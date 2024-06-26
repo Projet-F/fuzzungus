@@ -1,11 +1,12 @@
 import random
 import struct
+from deprecated import deprecated
 
 from boofuzz import helpers
-from ..fuzzable import Fuzzable
+from .base_primitive import BasePrimitive
 
-
-class RandomData(Fuzzable):
+@deprecated(reason="Use Bytes or BitField instead.")
+class RandomData(BasePrimitive):
     """Generate a random chunk of data while maintaining a copy of the original.
 
     A random length range can be specified. For a static length, set min/max length to be the same.

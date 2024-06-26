@@ -1,9 +1,7 @@
-Pedram Amini <pedram.amini@gmail.com>
-    http://pedram.openrce.org
-    http://www.openrce.org
-    
-Aaron Portnoy <aportnoy@gmail.com>
-    http://dvlabs.tippingpoint.com/team/aportnoy
-    
-Ryan Sears <fitblip@gmail.com>
-    http://fitblip.github.com/
+Loup <loup@fil.net>
+    https://fil.net
+
+Kevin <kevin.guiguet.kg@gmail.com>
+
+Gabin <littlebtheory@gmail.com>
+    https://github.com/LittleBangTheory

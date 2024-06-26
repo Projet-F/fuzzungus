@@ -1,7 +1,5 @@
 import struct
-
 from .bit_field import BitField
-
 
 class Byte(BitField):
     """The byte sized bit field primitive.

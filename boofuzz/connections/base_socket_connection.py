@@ -4,7 +4,7 @@ import os
 import socket
 import struct
 
-from boofuzz.connections import itarget_connection
+from . import itarget_connection
 
 
 def _seconds_to_sockopt_format(seconds):
@@ -26,15 +26,27 @@ class BaseSocketConnection(itarget_connection.ITargetConnection, metaclass=abc.A
     .. versionadded:: 0.2.0
 
     Args:
-        send_timeout (float): Seconds to wait for send before timing out. Default 5.0.
-        recv_timeout (float): Seconds to wait for recv before timing out. Default 5.0.
+        send_timeout (float): Sets the timeout value specifying the amount of time that an output
+            function blocks because flow control prevents data from being sent. 
+            Default 0 : The recv_timeout is used for all operations.
+        recv_timeout (float): Sets the timeout value that specifies the maximum amount of time an 
+            input function waits until it completes. Default 5.0.
     """
 
     def __init__(self, send_timeout, recv_timeout):
+        # Not a really clean solution, but allows to type parent_target without circular import
+        from ..sessions import target
+
+        # Set default timeout for all new sockets
+        # This prevents new sockets to be created in blocking mode
+        socket.setdefaulttimeout(recv_timeout)
+
+        # Parameters
         self._send_timeout = send_timeout
         self._recv_timeout = recv_timeout
-
-        self._sock = None
+        # TODO : Solve circular import when typing parent_target
+        self.parent_target:target.Target = None
+        self._sock: socket.socket|None = None
 
     def close(self):
         """
@@ -53,5 +65,29 @@ class BaseSocketConnection(itarget_connection.ITargetConnection, metaclass=abc.A
         Returns:
             None
         """
-        self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, _seconds_to_sockopt_format(self._send_timeout))
-        self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, _seconds_to_sockopt_format(self._recv_timeout))
+        self._sock.setsockopt(
+                socket.SOL_SOCKET,
+                socket.SO_SNDTIMEO,
+                _seconds_to_sockopt_format(self._send_timeout))
+        self._sock.setsockopt(
+            socket.SOL_SOCKET,
+            socket.SO_RCVTIMEO,
+            _seconds_to_sockopt_format(self._recv_timeout))
+
+    def get_recv_timeout(self):
+        """
+        Get the current recv timeout.
+
+        Returns:
+            float: The current recv timeout.
+        """
+        return self._recv_timeout
+
+    def get_send_timeout(self):
+        """
+        Get the current send timeout.
+
+        Returns:
+            float: The current send timeout.
+        """
+        return self._send_timeout

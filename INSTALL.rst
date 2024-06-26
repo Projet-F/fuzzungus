@@ -1,33 +1,56 @@
-Installing boofuzz
-==================
+Installing Fuzzungus
+====================
+
+Install with docker
+-------------------
+
+To build the docker image use the shell script ``./build.sh``.
+
+After that, launch the two dockers (one for fuzzungus and the other for the database).
+  ``docker compose up -d``
+
+When the docker is up, you can access the documentation of this project.
+Open `html_docs/index.html`.
+
+Then, use boo to run the fuzzer :
+  ``./boo --help``
+
+  ``./boo fuzz --help``
 
 Prerequisites
 -------------
 
-Boofuzz requires Python ≥ 3.8. Recommended installation requires ``pip``. As a base requirement, the following packages
-are needed:
+Fuzzungus requires Python >= 3.12. As a base requirement, the following packages are needed:
 
 Ubuntu/Debian
-  ``sudo apt-get install python3-pip python3-venv build-essential``
+  ``sudo apt-get install python3-pip python3-venv build-essential postgresql``
 OpenSuse
-  ``sudo zypper install python3-devel gcc``
+  ``sudo zypper install python3-devel gcc postgresql``
 CentOS
-  ``sudo yum install python3-devel gcc``
+  ``sudo yum install python3-devel gcc postgresql``
 
-Install
--------
-It is strongly recommended to set up boofuzz in a `virtual environment
-(venv) <https://docs.python.org/3/tutorial/venv.html>`_. First, create a directory that will hold our boofuzz install:
+Install from source
+-------------------
+
+It is strongly recommended to set up Fuzzungus in a `virtual environment (venv) <https://docs.python.org/3/tutorial/venv.html>`_.
+First, clone the project in a directory that will hold the fuzzungus install:
 
 .. code-block:: bash
 
-    $ mkdir boofuzz && cd boofuzz
+    $ git clone https://git-pi-25.esisar.grenoble-inp.fr/pi25/fuzzungus.git && cd fuzzungus
     $ python3 -m venv env
 
-This creates a new virtual environment env in the current folder. Note that the
-Python version in a virtual environment is fixed and chosen at its creation.
-Unlike global installs, within a virtual environment ``python`` is aliased to
-the Python version of the virtual environment.
+This creates a new virtual environment env in the current folder. Note that the Python version in a virtual environment is fixed and chosen at its creation.
+Unlike global installs, within a virtual environment ``python`` is aliased to the Python version of the virtual environment.
+
+Next, add the path to the `boofuzz` folder in `env/bin/activate` : 
+
+.. code-block:: bash
+
+    PYTHONPATH="${PYTHONPATH}:/absolute/path/to/boofuzz"
+    export PYTHONPATH
+
+This is to ensure that the boofuzz package is available everywhere in the virtual environment.
 
 Next, activate the virtual environment:
 
@@ -35,11 +58,11 @@ Next, activate the virtual environment:
 
     $ source env/bin/activate
 
-Or, if you are on Windows:
+You can check that the variable has been set correctly by running:
 
-.. code-block:: batch
+.. code-block:: bash
 
-    > env\Scripts\activate.bat
+    $ echo $PYTHONPATH
 
 Ensure you have the latest version of both ``pip`` and ``setuptools``:
 
@@ -47,78 +70,38 @@ Ensure you have the latest version of both ``pip`` and ``setuptools``:
 
     (env) $ pip install -U pip setuptools
 
-Finally, install boofuzz:
+Then, install the necessary packages :
 
 .. code-block:: bash
 
-    (env) $ pip install boofuzz
+    (env) $ pip install attrs click colorama Flask funcy psutil pydot pyserial tornado deprecated psycopg websocket-client
 
-To run and test your fuzzing scripts, make sure to always activate the virtual
-environment beforehand.
+Docs extras packages :
 
-From Source
------------
-1. Like above, it is recommended to set up a virtual environment. Depending on your
-   concrete setup, this is largely equivalent to the steps outlined above. Make sure
-   to upgrade ``setuptools`` and ``pip`` or ``poetry``.
-2. Download the source code. You can either grab a zip from https://github.com/jtpereyda/boofuzz
-   or directly clone it with git:
+.. code-block:: bash
 
-   .. code-block:: bash
+    (env) $ pip install poetry sphinx sphinx_rtd_theme sphinx_collapse sphinx-mermaid pygments graphviz
 
-      $ git clone https://github.com/jtpereyda/boofuzz.git
+Dev extras packages :
 
-Install with Poetry
-~~~~~~~~~~~~~~~~~~~
-Poetry will automatically create a virtual environment for you and install the required dependencies. The installation
-will be editable by default, meaning that changes to the source code will be seen directly without reinstalling.
+.. code-block:: bash
 
-Simply execute the following command inside the boofuzz source dir:
+    (env) $ pip install black flake8 ipaddress mock netifaces pygments pytest pytest-bdd pytest-cov poetry sphinx sphinx_rtd_theme sphinx_collapse sphinx-mermaid tox wheel graphviz
 
-   .. code-block:: bash
+Finally, install the submodules. Currently, only `Seclist`_ is used.
 
-       $ poetry install
+.. code-block:: bash
 
-To install with extra dependencies like `dev` or `docs`, specify them in one of the following ways:
+    (env) $ git submodule init
+    (env) $ git submodule update
 
-   .. code-block:: bash
+.. warning::
+    This may take up two minutes !
 
-       $ poetry install --extras "dev"
-       $ poetry install -E docs
-       $ poetry install --all-extras
+To run and test your fuzzing scripts, make sure to always activate the virtual environment beforehand.
 
-Install with Pip
-~~~~~~~~~~~~~~~~
-Run ``pip`` from within the boofuzz directory after activating the virtual environment:
-
-   .. code-block:: bash
-
-       $ pip install .
-
-Tips:
-
--  Use the ``-e`` option for developer mode, which allows changes to be
-   seen automatically without reinstalling:
-
-   .. code-block:: bash
-
-       $ pip install -e .
-
--  To install developer tools (unit test dependencies, test runners, etc.) as well:
-
-   .. code-block:: bash
-
-       $ pip install -e .[dev]
-
--  If you’re behind a proxy:
-
-   .. code-block:: bash
-
-       $ set HTTPS_PROXY=http://your.proxy.com:port
-
-- If you're planning on developing boofuzz itself, you can save a directory and
-  create your virtual environment after you've cloned the source code (so ``env/``
-  is within the main boofuzz directory).
+.. note::
+    To use the Postgres database with a source installation, use ``docker compose up db -d`` to launch only the db docker.
 
 Extras
 ------
@@ -145,3 +128,4 @@ However, some people still prefer the PCAP approach.
 .. _help site: http://www.howtogeek.com/197947/how-to-install-python-on-windows/
 .. _releases page: https://github.com/jtpereyda/boofuzz/releases
 .. _`https://github.com/jtpereyda/boofuzz`: https://github.com/jtpereyda/boofuzz
+.. _`Seclist`: https://github.com/danielmiessler/SecLists

@@ -62,7 +62,7 @@ class External(BaseMonitor):
         else:
             return True
 
-    def start_target(self):
+    def start_target(self, *args, **kwargs):
         """
         Start up the target. Called when post_send failed.
         Returns success of failure of the action

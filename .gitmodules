@@ -1,0 +1,3 @@
+[submodule "data/SecLists"]
+	path = data/SecLists
+	url = https://github.com/danielmiessler/SecLists.git

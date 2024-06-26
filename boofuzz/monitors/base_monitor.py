@@ -6,10 +6,10 @@ class BaseMonitor:
     .. versionadded:: 0.2.0
     """
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         return
 
-    def alive(self):
+    def alive(self, *args, **kwargs):
         """
         Called when a Target containing this Monitor is added to a session.
         Use this function to connect to e.g. RPC hosts if your target lives
@@ -90,7 +90,7 @@ class BaseMonitor:
         """
         return ""
 
-    def start_target(self):
+    def start_target(self, *args, **kwargs):
         """
         Starts a target. You MUST return True if the start was successful. You
         MUST return False if not. Monitors will be tried to start the target

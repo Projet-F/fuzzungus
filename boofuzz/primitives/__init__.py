@@ -15,6 +15,7 @@ from .simple import Simple
 from .static import Static
 from .string import String
 from .word import Word
+from .multipledefault import MultipleDefault
 
 __all__ = [
     "BasePrimitive",
@@ -27,6 +28,7 @@ __all__ = [
     "FromFile",
     "Group",
     "Mirror",
+    "MultipleDefault",
     "QWord",
     "RandomData",
     "Simple",

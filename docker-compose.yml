@@ -1,0 +1,29 @@
+# name: fuzzungus # This keyword didn't work for old docker-compose version.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    cpus: '2'
+    mem_limit: 1G
+    network_mode: none
+    environment:
+      POSTGRES_PASSWORD: voluntarily_unsecure
+      POSTGRES_USER: fuzz
+      POSTGRES_DB: fuzz
+    volumes:
+      - ./db_data:/var/lib/postgresql/data:rw
+      - ./db_socket:/var/run/postgresql/:rw
+  app:
+    build: .
+    restart: unless-stopped
+    cpus: '2'
+    mem_limit: 1G
+    environment:
+      - PYTHONUNBUFFERED=1
+    network_mode: host
+    volumes:
+      - ./data:/app/data:ro
+      - ./fuzzungus-results:/app/fuzzungus-results:rw
+      - ./configuration-files:/app/configuration-files:ro
+      - ./html_docs:/app/html_docs:rw
+      - ./db_socket:/var/run/postgresql/:rw

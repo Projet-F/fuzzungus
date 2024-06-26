@@ -176,6 +176,9 @@ table.test-steps .log-check { }
 table.test-steps .log-info { }
 table.test-steps .log-pass { color: limegreen; }
 table.test-steps .log-fail { color: red; }
+table.test-steps .log-target-warn { color: yellow; }
+table.test-steps .log-target-error { color: blue; }
+table.test-steps .log-recap { color: lightgreen; }
 table.test-steps .log-send { color: darkcyan;
   /* start break-long-words code */
   display: inline-block;

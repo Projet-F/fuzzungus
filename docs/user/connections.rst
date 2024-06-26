@@ -14,9 +14,31 @@ Available options include:
 - :class:`RawL3SocketConnection <boofuzz.connections.RawL3SocketConnection>`
 - :func:`SocketConnection (depreciated)<boofuzz.connections.SocketConnection>`
 - :class:`SerialConnection <boofuzz.connections.SerialConnection>`
+- :class:`WebSocketConnection <boofuzz.connections.WebSocketConnection>`
 
 ITargetConnection
 =================
+
+ITargetConnection defines the interface used by the Target classes when sending
+and receiving data. This represents the network layer or medium directly below
+the protocol under test.
+
+Design Considerations
+---------------------
+
+Design goals:
+
+ 1. Flexibility with mediums.
+ 2. Low-layer; avoid interactions with rest of framework.
+    * Normal logging is left to higher layers.
+ 3. Facilitate thorough, auditable logs.
+    * The send method returns the number of bytes actually transmitted, since some mediums have maximum transmission unit (MTU) limits.
+    * The Sulley code using a connection should check this value and log the number of bytes transmitted.
+    * This enables thorough auditability of data actually sent.
+
+Source code
+-----------
+
 .. autoclass:: boofuzz.connections.ITargetConnection
     :members:
     :undoc-members:
@@ -24,6 +46,21 @@ ITargetConnection
 
 BaseSocketConnection
 ====================
+
+The SocketConnection is used by the Target class to encapsulate socket connection details. It implements ITargetConnection.
+
+Multiple protocols may be used; see constructor.
+
+Future
+------
+
+The low-level socket protocols have maximum transmission unit (MTU) limits
+based on the standard ethernet frame. Availability of jumbo frames could
+enable some interesting tests.
+
+Source code
+-----------
+
 .. autoclass:: boofuzz.connections.BaseSocketConnection
     :members:
     :undoc-members:
@@ -71,6 +108,13 @@ SocketConnection
 SerialConnection
 ================
 .. autoclass:: boofuzz.connections.SerialConnection
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+WebSocketConnection
+===================
+.. autoclass:: boofuzz.connections.WebSocketConnection
     :members:
     :undoc-members:
     :show-inheritance:

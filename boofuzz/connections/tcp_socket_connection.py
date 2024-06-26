@@ -20,7 +20,7 @@ class TCPSocketConnection(base_socket_connection.BaseSocketConnection):
 
     """
 
-    def __init__(self, host, port, send_timeout=5.0, recv_timeout=5.0, server=False):
+    def __init__(self, host, port, send_timeout=5.0, recv_timeout=5.0, server=False,*args,**kwargs):
         super(TCPSocketConnection, self).__init__(send_timeout, recv_timeout)
 
         self.host = host
@@ -92,15 +92,18 @@ class TCPSocketConnection(base_socket_connection.BaseSocketConnection):
 
         try:
             data = self._sock.recv(max_bytes)
-        except socket.timeout:
+        except socket.timeout :
             data = b""
+            self.parent_target.get_fuzz_data_logger().log_target_warn("socket.timeout on recv()")
         except socket.error as e:
             if e.errno == errno.ECONNABORTED:
                 raise exception.BoofuzzTargetConnectionAborted(
                     socket_errno=e.errno, socket_errmsg=e.strerror
                 ).with_traceback(sys.exc_info()[2])
-            elif (e.errno == errno.ECONNRESET) or (e.errno == errno.ENETRESET) or (e.errno == errno.ETIMEDOUT):
+            elif (e.errno == errno.ECONNRESET) or (e.errno == errno.ENETRESET) :
                 raise exception.BoofuzzTargetConnectionReset().with_traceback(sys.exc_info()[2])
+            elif e.errno == errno.ETIMEDOUT :
+                self.parent_target.get_fuzz_data_logger().log_target_warn(f"{e} on recv()")
             elif e.errno == errno.EWOULDBLOCK:  # timeout condition if using SO_RCVTIMEO or SO_SNDTIMEO
                 data = b""
             else:

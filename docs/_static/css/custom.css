@@ -3,7 +3,11 @@
 
 .wy-nav-side, .wy-nav-top, .wy-side-nav-search {
   /* background: #343131; */
-  background: #303030;
+  background: #28002c;
+}
+
+.wy-nav-content {
+  min-width: 1200px;
 }
 
 .wy-side-nav-search > div.version {

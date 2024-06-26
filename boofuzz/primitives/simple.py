@@ -1,7 +1,7 @@
-from ..fuzzable import Fuzzable
+from .base_primitive import BasePrimitive
 
 
-class Simple(Fuzzable):
+class Simple(BasePrimitive):
     """Simple bytes value with manually specified fuzz values only.
 
     :type name: str, optional

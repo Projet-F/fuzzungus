@@ -13,6 +13,7 @@ from .ssl_socket_connection import SSLSocketConnection
 from .tcp_socket_connection import TCPSocketConnection
 from .udp_socket_connection import UDPSocketConnection
 from .unix_socket_connection import UnixSocketConnection
+from .websocket_connection import WebSocketConnection
 
 __all__ = [
     "BaseSocketConnection",
@@ -29,4 +30,5 @@ __all__ = [
     "TCPSocketConnection",
     "UDPSocketConnection",
     "UnixSocketConnection",
+    "WebSocketConnection",
 ]

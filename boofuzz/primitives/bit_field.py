@@ -1,8 +1,9 @@
 import struct
+import random
 
 from .. import helpers
 from ..constants import LITTLE_ENDIAN
-from ..fuzzable import Fuzzable
+from .base_primitive import BasePrimitive
 
 
 def binary_string_to_int(binary):
@@ -34,7 +35,7 @@ def int_to_binary_string(number, bit_width):
     return "".join(map(lambda x: str((number >> x) & 1), range(bit_width - 1, -1, -1)))
 
 
-class BitField(Fuzzable):
+class BitField(BasePrimitive):
     """
     The bit field primitive represents a number of variable length and is used to define all other integer types.
 
@@ -42,7 +43,7 @@ class BitField(Fuzzable):
     :param name: Name, for referencing later. Names should always be provided, but if not, a default name will be given,
         defaults to None
     :type  default_value: int, optional
-    :param default_value: Default integer value, defaults to 0
+    :param default_value: Default integer value, defaults to 0b0
     :type  width: int, optional
     :param width: Width in bits, defaults to 8
     :type  max_num: int, optional
@@ -59,6 +60,8 @@ class BitField(Fuzzable):
     :param fuzz_values: List of custom fuzz values to add to the normal mutations, defaults to None
     :type  fuzzable: bool, optional
     :param fuzzable: Enable/disable fuzzing of this primitive, defaults to true
+    :type mask: int, optional
+    :param mask: Only fuzz bits with a 0 in the mask, default to None
     """
 
     def __init__(
@@ -71,6 +74,7 @@ class BitField(Fuzzable):
         output_format="binary",
         signed=False,
         full_range=False,
+        mask=None,
         *args,
         **kwargs
     ):
@@ -84,6 +88,7 @@ class BitField(Fuzzable):
         self.format = output_format
         self.signed = signed
         self.full_range = full_range
+        self.mask = mask
 
         if not self.max_num:
             self.max_num = binary_string_to_int("1" + "0" * width)
@@ -157,8 +162,45 @@ class BitField(Fuzzable):
         return helpers.str_to_bytes(temp)
 
     def mutations(self, default_value):
-        for val in self._iterate_fuzz_lib():
-            yield val
+        if self.request.parent_session.round_type == "library" :
+            for val in self._iterate_fuzz_lib():
+                yield val
+
+        elif self.request.parent_session.round_type == "random_mutation" :
+            # If the seed index (the round number) is less than or equal to the max_rounds_mutation,
+            # mutate the character
+            if self.request.parent_session.seed_index < self.max_rounds_mutation:
+                random.seed(self.request.primitive_seed)
+                for _ in range(self.num_random_mutations):
+                    yield self.random_generation()
+
+        elif self.request.parent_session.round_type == "random_generation" :
+            random.seed(self.request.primitive_seed)
+            for _ in range(self.num_random_generations):
+                yield self.random_generation()
+
+
+    def random_generation(self):
+        """
+        Generate random bit_field
+        return Generated string.
+        """
+        length = self.width
+        if(self.mask != None):
+            if(len(bin(self.mask))-2 != self.width):
+                raise ValueError("Mask must be same len than width")
+            else:
+                random_bit_field = self._default_value & self.mask
+                for i in range (self.width):
+                    if (self.mask & (2**i) == 0):
+                        if(random.randint(0,1)==1):
+                            random_bit_field += 2**i
+
+        else:
+            random_bit_field = random.randint(0,2**length-1)
+
+        #random_bit_field=int_to_binary_string(random_bit_field,length)
+        return random_bit_field
 
     @staticmethod
     def _render_int(value, output_format, bit_width, endian, signed):
@@ -175,6 +217,7 @@ class BitField(Fuzzable):
         Returns:
             str: value converted to a byte string
         """
+
         if output_format == "binary":
             bit_stream = ""
             rendered = b""
@@ -215,5 +258,5 @@ class BitField(Fuzzable):
 
             # unsigned integer or positive signed integer.
             else:
-                _rendered = "%d" % value
+                _rendered = f"{value}"
         return _rendered

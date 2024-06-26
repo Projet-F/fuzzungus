@@ -52,15 +52,27 @@ poetry.lock
 
 # Sphinx documentation
 docs/_build/
+html_docs/
 
 # PyCharm
 .idea/
+
+# Vscode project settings
+.vscode
 
 # Misc
 .fuzz_ints
 .fuzz_strings
 archived_fuzzies/*.session
 boofuzz-results/
+fuzzungus-results/
+db_data/
+db_socket/
+
+# Graph generation
+*.png
+!artwork/*.png
+!docs/**/*.png
 
 # Temporary Files
 *.swp

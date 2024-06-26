@@ -1,7 +1,5 @@
 import struct
-
 from boofuzz.primitives.bit_field import BitField
-
 
 class QWord(BitField):
     """The 8 byte sized bit field primitive.

@@ -67,7 +67,7 @@ class ProcessMonitor(BaseMonitor, pedrpc.Client):
         """This method is forwarded to the RPC daemon."""
         return self.__method_missing("get_crash_synopsis")
 
-    def start_target(self):
+    def start_target(self, *args, **kwargs):
         """This method is forwarded to the RPC daemon."""
         return self.__method_missing("start_target")
 

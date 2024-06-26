@@ -91,12 +91,36 @@ test_step_info = {
         "css_class": "log-fail",
         "curses": COLOR_PAIR_RED,
     },
+    "target-warn": {
+        "indent": 3,
+        "title": "Target warning",
+        "html": "Target warning: {msg}",
+        "terminal": Fore.YELLOW + Style.BRIGHT + "Target warning: {msg}" + Style.RESET_ALL,
+        "css_class": "log-target-warn",
+        "curses": COLOR_PAIR_YELLOW,
+    },
+    "target-error": {
+        "indent": 3,
+        "title": "Target error",
+        "html": "Target error: {msg}",
+        "terminal": Fore.BLUE + Style.BRIGHT + "Target error: {msg}" + Style.RESET_ALL,
+        "css_class": "log-target-error",
+        "curses": COLOR_PAIR_RED,
+    },
     "pass": {
         "indent": 3,
         "title": "Check OK",
         "html": "Check OK: {msg}",
         "terminal": Fore.GREEN + Style.BRIGHT + "Check OK: {msg}" + Style.RESET_ALL,
         "css_class": "log-pass",
+        "curses": COLOR_PAIR_GREEN,
+    },
+    "recap": {
+        "indent": 1,
+        "title": "Recap",
+        "html": "Recap: {msg}",
+        "terminal": Fore.GREEN + Style.BRIGHT + "Recap: {msg}" + Style.RESET_ALL,
+        "css_class": "log-recap",
         "curses": COLOR_PAIR_GREEN,
     },
 }
@@ -107,7 +131,7 @@ def ip_str_to_bytes(ip):
 
     :param ip: IP address string, e.g. '127.0.0.1'
 
-    :return 4-byte representation of ip, e.g. b'\x7F\x00\x00\x01'
+    :return 4-byte representation of ip
     :rtype bytes
 
     :raises ValueError if ip is not a legal IP address.
@@ -300,7 +324,7 @@ def udp_checksum(msg, src_addr, dst_addr):
     # If the packet is too big, the checksum is undefined since len(msg)
     # won't fit into two bytes. So we just pick our best definition.
     # "Truncate" the message as it appears in the checksum.
-    msg = msg[0 : ip_constants.UDP_MAX_LENGTH_THEORETICAL]
+    msg = msg[0: ip_constants.UDP_MAX_LENGTH_THEORETICAL]
 
     return ipv4_checksum(_udp_checksum_pseudo_header(src_addr, dst_addr, len(msg)) + msg)
 
@@ -357,7 +381,7 @@ def _indent_after_first_line(lines, amount, ch=" "):
 
 
 def format_log_msg(
-    msg_type, description=None, data=None, indent_size=2, timestamp=None, truncated=False, format_type="terminal"
+        msg_type, description=None, data=None, indent_size=2, timestamp=None, truncated=False, format_type="terminal"
 ):
     curses_mode = False
     if data is None:

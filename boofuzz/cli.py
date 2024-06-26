@@ -9,9 +9,9 @@ from . import constants, sessions
 from .cli_context import CliContext
 from .constants import DEFAULT_PROCMON_PORT
 from .connections import TCPSocketConnection
-from .fuzz_logger_csv import FuzzLoggerCsv
-from .fuzz_logger_curses import FuzzLoggerCurses
-from .fuzz_logger_text import FuzzLoggerText
+from .loggers.fuzz_logger_csv import FuzzLoggerCsv
+from .loggers.fuzz_logger_curses import FuzzLoggerCurses
+from .loggers.fuzz_logger_text import FuzzLoggerText
 from .helpers import parse_target
 from .monitors import ProcessMonitor
 from .utils.process_monitor_local import ProcessMonitorLocal

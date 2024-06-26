@@ -1,10 +1,10 @@
 # Minimal makefile for Sphinx documentation
-#
+# Make sure to `run pip install -e .` in the root directory before running this Makefile, to build the project
 
 # You can set these variables from the command line.
 SPHINXOPTS    = -TW # apply changes to tox.ini accordingly
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = boofuzz
+SPHINXPROJ    = ../boofuzz
 SOURCEDIR     = .
 BUILDDIR      = _build
 

@@ -7,7 +7,7 @@ from .base_monitor import BaseMonitor
 class CallbackMonitor(BaseMonitor):
     """
     New-Style Callback monitor that is used in Session to provide callback-arrays.
-    It's purpose is to keep the \\*_callbacks arguments in the session class while
+    Its purpose is to keep the \\*_callbacks arguments in the session class while
     simplifying the implementation of session by forwarding these callbacks to
     the monitor infrastructure.
 
@@ -61,10 +61,12 @@ class CallbackMonitor(BaseMonitor):
 
         All exceptions are discarded after handling.
         """
+        live = True
         try:
             for f in self.on_post_send:
                 fuzz_data_logger.open_test_step('Post-test case callback: "{0}"'.format(f.__name__))
-                f(target=target, fuzz_data_logger=fuzz_data_logger, session=session, sock=target)
+                if f(target=target, fuzz_data_logger=fuzz_data_logger, session=session, sock=target) is False:
+                    live = False
         except exception.BoofuzzTargetConnectionReset:
             fuzz_data_logger.log_fail(constants.ERR_CONN_RESET_FAIL)
         except exception.BoofuzzTargetConnectionAborted as e:
@@ -84,7 +86,7 @@ class CallbackMonitor(BaseMonitor):
             )
         finally:
             fuzz_data_logger.open_test_step("Cleaning up connections from callbacks")
-        return True
+        return live
 
     def restart_target(self, target=None, fuzz_data_logger=None, session=None):
         """

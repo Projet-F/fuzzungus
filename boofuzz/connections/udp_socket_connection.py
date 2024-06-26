@@ -26,7 +26,7 @@ class UDPSocketConnection(base_socket_connection.BaseSocketConnection):
 
     _max_payload = None
 
-    def __init__(self, host, port, send_timeout=5.0, recv_timeout=5.0, server=False, bind=None, broadcast=False):
+    def __init__(self, host, port, send_timeout=5.0, recv_timeout=5.0, server=False, bind=None, broadcast=False,*args,**kwargs):
         super(UDPSocketConnection, self).__init__(send_timeout, recv_timeout)
 
         self.host = host
@@ -42,6 +42,12 @@ class UDPSocketConnection(base_socket_connection.BaseSocketConnection):
 
         if self.bind and self.server:
             raise Exception("You cannot set both bind and server at the same time.")
+
+    def get_udp_client_port(self):
+        return self._udp_client_port
+
+    def get_sock(self):
+        return self._sock
 
     def open(self):
         """Opens connection to the target. Make sure to call close!
@@ -82,17 +88,22 @@ class UDPSocketConnection(base_socket_connection.BaseSocketConnection):
                 raise exception.SullyRuntimeError(
                     "UDPSocketConnection.recv() requires a bind address/port." " Current value: {}".format(self.bind)
                 )
-        except socket.timeout:
+        except socket.timeout :
             data = b""
-        except socket.error as e:
+            self.parent_target.parent_session.continue_case = False
+            self.parent_target.get_fuzz_data_logger().log_target_warn("Socket timeout on recv().")
+        except socket.error as e :
             if e.errno == errno.ECONNABORTED:
                 raise exception.BoofuzzTargetConnectionAborted(
                     socket_errno=e.errno, socket_errmsg=e.strerror
                 ).with_traceback(sys.exc_info()[2])
-            elif e.errno in [errno.ECONNRESET, errno.ENETRESET, errno.ETIMEDOUT]:
+            if e.errno in [errno.ECONNRESET, errno.ENETRESET, errno.EWOULDBLOCK] :
                 raise exception.BoofuzzTargetConnectionReset().with_traceback(sys.exc_info()[2])
-            elif e.errno == errno.EWOULDBLOCK:
+            # Catch timeout exceptions and log them, including socket.timeout
+            if e.errno is errno.ETIMEDOUT :
                 data = b""
+                self.parent_target.parent_session.continue_case = False
+                self.parent_target.get_fuzz_data_logger().log_target_warn(f"{e} on recv().")
             else:
                 raise
 
@@ -192,3 +203,10 @@ class UDPSocketConnection(base_socket_connection.BaseSocketConnection):
     @property
     def info(self):
         return "{0}:{1}".format(self.host, self.port)
+
+    def reuse_my_port(self):
+        local_address, local_port = self._sock.getsockname()
+        self.bind = (local_address, local_port)
+
+    def use_same_port(self, connection):
+        self.bind = connection.bind

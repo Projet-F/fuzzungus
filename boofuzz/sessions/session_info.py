@@ -1,17 +1,17 @@
 import warnings
 
-from ..fuzz_logger_db import FuzzLoggerDbReader
+from ..loggers.fuzz_logger_postgres import FuzzLoggerPostgresReader
 
 
 class SessionInfo:
     """
     .. versionchanged:: 0.4.2
-       This class has been moved into the sessions subpackage. The full path is now
+       This class has been moved into the sessions' subpackage. The full path is now
        boofuzz.sessions.session_info.SessionInfo.
     """
 
-    def __init__(self, db_filename):
-        self._db_reader = FuzzLoggerDbReader(db_filename=db_filename)
+    def __init__(self, db_name, db_table_name):
+        self._db_reader = FuzzLoggerPostgresReader(db_name=db_name, db_table_name=db_table_name)
 
     @property
     def monitor_results(self):
@@ -48,7 +48,7 @@ class SessionInfo:
 
     @property
     def total_mutant_index(self):
-        x = next(self._db_reader.query("SELECT COUNT(*) FROM cases"))[0]
+        x = self._db_reader.get_total_mutant_index()
         return x
 
     @property

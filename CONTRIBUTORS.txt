@@ -1,5 +1,9 @@
 # alphabetical order.
 
+Aaron Portnoy <aportnoy@gmail.com>
+    - Author
+    - http://dvlabs.tippingpoint.com/team/aportnoy
+
 Charles Timko <https://www.popebp.com>
 	- Semantic fix (problems from removing ^M)
 
@@ -22,6 +26,9 @@ Gerald Eisenhaur <gerry.eisenhaur@gmail.com>
 Jared DeMott <jdemott@appliedsec.com>
     - General ideas, beta testing and morale support.
 
+Markus Piéton <https://github.com/marpie>
+    - Serious bug fix footwork.
+
 Nibbler <nbblrr@gmail.com | @Nbblrr>
 	- Lots of general improvements
 	- Bugfixes
@@ -38,10 +45,16 @@ Paul Sorensen <paulsorensen5@gmail.com>
     - Python 3 porting
     - Bug fixes
 
+Pedram Amini <pedram.amini@gmail.com>
+    - Author
+    - http://pedram.openrce.org
+    - http://www.openrce.org
+
 Peter Silberman <peter.silberman@gmail.com>
     - General ideas, beta testing and morale support.
     - Upcoming file fuzzing capability.
     - Bug reports.
-	
-Markus Piéton <https://github.com/marpie>
-    - Serious bug fix footwork.
+
+Ryan Sears <fitblip@gmail.com>
+    - Author
+    - http://fitblip.github.com/
