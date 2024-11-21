@@ -59,4 +59,3 @@ Documentation
 -------------
 
 Go to the `docs/` repo to generate the documentation using `make html`.
-
